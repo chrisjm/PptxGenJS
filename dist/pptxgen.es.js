@@ -1,4 +1,4 @@
-/* PptxGenJS 3.7.0-beta @ 2021-05-20T19:56:00.770Z */
+/* PptxGenJS 3.7.0-beta @ 2021-05-20T21:46:07.058Z */
 import JSZip from 'jszip';
 
 /*! *****************************************************************************
@@ -4956,7 +4956,7 @@ function makeChartType(chartType, data, opts, valAxisId, catAxisId, isMultiTypeC
                 // [20190117] NOTE: Adding these to RADAR chart causes unrecoverable corruption!
                 if (chartType !== CHART_TYPE.RADAR) {
                     strXml += '  <c:dLbls>';
-                    strXml += '    <c:numFmt formatCode="' + opts.dataLabelFormatCode + '" sourceLinked="0"/>';
+                    strXml += "    <c:numFmt formatCode=\"" + (encodeXmlEntities(opts.dataLabelFormatCode) || 'General') + "\" sourceLinked=\"0\"/>";
                     if (opts.dataLabelBkgrdColors) {
                         strXml += '    <c:spPr>';
                         strXml += '       <a:solidFill>' + createColorElement(seriesColor) + '</a:solidFill>';
@@ -5094,7 +5094,7 @@ function makeChartType(chartType, data, opts, valAxisId, catAxisId, isMultiTypeC
             // 3: "Data Labels"
             {
                 strXml += '  <c:dLbls>';
-                strXml += '    <c:numFmt formatCode="' + opts.dataLabelFormatCode + '" sourceLinked="0"/>';
+                strXml += "    <c:numFmt formatCode=\"" + (encodeXmlEntities(opts.dataLabelFormatCode) || 'General') + "\" sourceLinked=\"0\"/>";
                 strXml += '    <c:txPr>';
                 strXml += '      <a:bodyPr/>';
                 strXml += '      <a:lstStyle/>';
@@ -5394,7 +5394,7 @@ function makeChartType(chartType, data, opts, valAxisId, catAxisId, isMultiTypeC
             // 3: Data Labels
             {
                 strXml += '  <c:dLbls>';
-                strXml += '    <c:numFmt formatCode="' + opts.dataLabelFormatCode + '" sourceLinked="0"/>';
+                strXml += "    <c:numFmt formatCode=\"" + (encodeXmlEntities(opts.dataLabelFormatCode) || 'General') + "\" sourceLinked=\"0\"/>";
                 strXml += '    <c:txPr>';
                 strXml += '      <a:bodyPr/>';
                 strXml += '      <a:lstStyle/>';
@@ -5534,7 +5534,7 @@ function makeChartType(chartType, data, opts, valAxisId, catAxisId, isMultiTypeC
             // 3: Data Labels
             {
                 strXml += '  <c:dLbls>';
-                strXml += '    <c:numFmt formatCode="' + opts.dataLabelFormatCode + '" sourceLinked="0"/>';
+                strXml += "    <c:numFmt formatCode=\"" + (encodeXmlEntities(opts.dataLabelFormatCode) || 'General') + "\" sourceLinked=\"0\"/>";
                 strXml += '    <c:txPr>';
                 strXml += '      <a:bodyPr/>';
                 strXml += '      <a:lstStyle/>';
@@ -5624,7 +5624,7 @@ function makeChartType(chartType, data, opts, valAxisId, catAxisId, isMultiTypeC
             obj.labels.forEach(function (_label, idx) {
                 strXml += '<c:dLbl>';
                 strXml += " <c:idx val=\"" + idx + "\"/>";
-                strXml += "  <c:numFmt formatCode=\"" + (opts.dataLabelFormatCode || 'General') + "\" sourceLinked=\"0\"/>";
+                strXml += "  <c:numFmt formatCode=\"" + (encodeXmlEntities(opts.dataLabelFormatCode) || 'General') + "\" sourceLinked=\"0\"/>";
                 strXml += '  <c:spPr/><c:txPr>';
                 strXml += '   <a:bodyPr/><a:lstStyle/>';
                 strXml += '   <a:p><a:pPr>';
@@ -5644,7 +5644,7 @@ function makeChartType(chartType, data, opts, valAxisId, catAxisId, isMultiTypeC
                 strXml += '    <c:showBubbleSize val="0"/>';
                 strXml += '  </c:dLbl>';
             });
-            strXml += " <c:numFmt formatCode=\"" + (opts.dataLabelFormatCode || 'General') + "\" sourceLinked=\"0\"/>";
+            strXml += " <c:numFmt formatCode=\"" + (encodeXmlEntities(opts.dataLabelFormatCode) || 'General') + "\" sourceLinked=\"0\"/>";
             strXml += '	<c:txPr>';
             strXml += '	  <a:bodyPr/>';
             strXml += '	  <a:lstStyle/>';
@@ -5743,10 +5743,10 @@ function makeCatAxis(opts, axisId, valAxisId) {
     }
     // NOTE: Adding Val Axis Formatting if scatter or bubble charts
     if (opts._type === CHART_TYPE.SCATTER || opts._type === CHART_TYPE.BUBBLE) {
-        strXml += '  <c:numFmt formatCode="' + (opts.valAxisLabelFormatCode ? opts.valAxisLabelFormatCode : 'General') + '" sourceLinked="0"/>';
+        strXml += '  <c:numFmt formatCode="' + (opts.valAxisLabelFormatCode ? encodeXmlEntities(opts.valAxisLabelFormatCode) : 'General') + '" sourceLinked="0"/>';
     }
     else {
-        strXml += '  <c:numFmt formatCode="' + (opts.catLabelFormatCode || 'General') + '" sourceLinked="0"/>';
+        strXml += '  <c:numFmt formatCode="' + (encodeXmlEntities(opts.catLabelFormatCode) || 'General') + '" sourceLinked="0"/>';
     }
     if (opts._type === CHART_TYPE.SCATTER) {
         strXml += '  <c:majorTickMark val="none"/>';
@@ -5858,7 +5858,7 @@ function makeValAxis(opts, valAxisId) {
             title: opts.valAxisTitle || 'Axis Title',
         });
     }
-    strXml += "<c:numFmt formatCode='" + (opts.valAxisLabelFormatCode ? opts.valAxisLabelFormatCode : 'General') + "' sourceLinked=\"0\"/>";
+    strXml += "<c:numFmt formatCode=\"" + (opts.valAxisLabelFormatCode ? encodeXmlEntities(opts.valAxisLabelFormatCode) : 'General') + "\" sourceLinked=\"0\"/>";
     if (opts._type === CHART_TYPE.SCATTER) {
         strXml += '  <c:majorTickMark val="none"/>';
         strXml += '  <c:minorTickMark val="none"/>';
@@ -5931,7 +5931,7 @@ function makeSerAxis(opts, axisId, valAxisId) {
             title: opts.serAxisTitle || 'Axis Title',
         });
     }
-    strXml += '  <c:numFmt formatCode="' + (opts.serLabelFormatCode || 'General') + '" sourceLinked="0"/>';
+    strXml += "  <c:numFmt formatCode=\"" + (encodeXmlEntities(opts.serLabelFormatCode) || 'General') + "\" sourceLinked=\"0\"/>";
     strXml += '  <c:majorTickMark val="out"/>';
     strXml += '  <c:minorTickMark val="none"/>';
     strXml += '  <c:tickLblPos val="' + (opts.serAxisLabelPos || opts.barDir === 'col' ? 'low' : 'nextTo') + '"/>';
