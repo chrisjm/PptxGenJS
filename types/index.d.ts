@@ -1904,7 +1904,7 @@ declare namespace PptxGenJS {
 		catAxisMinVal?: number
 		catAxisOrientation?: 'minMax'
 		catAxisTitle?: string
-		catAxisTitleColor?: string
+		catAxisTitleColor?: Color
 		catAxisTitleFontFace?: string
 		catAxisTitleFontSize?: number
 		catAxisTitleRotate?: number
@@ -1983,7 +1983,7 @@ declare namespace PptxGenJS {
 		valAxisMinVal?: number
 		valAxisOrientation?: 'minMax'
 		valAxisTitle?: string
-		valAxisTitleColor?: string
+		valAxisTitleColor?: Color
 		valAxisTitleFontFace?: string
 		valAxisTitleFontSize?: number
 		valAxisTitleRotate?: number
@@ -2075,7 +2075,7 @@ declare namespace PptxGenJS {
 		title?: string
 		titleAlign?: string
 		titleBold?: boolean
-		titleColor?: string
+		titleColor?: Color
 		titleFontFace?: string
 		titleFontSize?: number
 		titlePos?: { x: number; y: number }
