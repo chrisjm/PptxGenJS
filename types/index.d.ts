@@ -1846,7 +1846,7 @@ declare namespace PptxGenJS {
 		 */
 		axisPos?: 'b' | 'l' | 'r' | 't'
 		border?: BorderProps
-		chartColors?: HexColor[]
+		chartColors?: Color[]
 		/**
 		 * opacity (0.0 - 1.0)
 		 * @example 0.5 // 50% opaque
