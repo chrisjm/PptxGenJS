@@ -1,10 +1,10 @@
 /**
- * browser.js
- * module for /demo/browser/index.html
+ * NAME: browser.js
+ * DESC: module for /demos/browser/index.html
  */
 import { execGenSlidesFuncs, runEveryTest } from "../../modules/demos.mjs";
 import { TABLE_NAMES_F, TABLE_NAMES_L, LOREM_IPSUM } from "../../modules/enums.mjs";
-import { BKGD_STARLABS, LOGO_STARLABS, STARLABS_LOGO_SM } from "../../modules/media.mjs";
+import { BKGD_STARLABS, CHECKMARK_GRN, LOGO_STARLABS, STARLABS_LOGO_SM, SVG_INFO_CIRCLE } from "../../modules/media.mjs";
 
 // ==================================================================================================================
 
@@ -18,117 +18,113 @@ export function doAppStart() {
 		return;
 	}
 
-	// STEP 1: Set UI (if you're me :-)
+	// STEP 1: Set UI to dev mode (if you're running locally, congrats you're a dev!)
 	if (window.location.href.indexOf("http://localhost:8000/") > -1) {
-		$("#tab1sec1").click();
-		$("#tab1sec2").click();
+		document.getElementById("basicPres").classList.add("d-none");
+		document.getElementById("codeSandbox").classList.remove("d-none");
 	}
 
-	// STEP 2: Show library info
+	// STEP 2: Introduction tab: Library Info
 	{
 		if (typeof Promise !== "function") {
-			$("header").after('<div class="alert alert-danger">Promise is undefined! (IE11 requires promise.min.js)</div>');
+			$("header").after(
+				'<div class="alert alert-danger mb-4"><h5>IE11 IS NO LONGER SUPPORTED!</h5>Promise is undefined! (IE11 requires promise.min.js)</div>'
+			);
 		} else {
-			let pptx = new PptxGenJS();
-			$("#infoBar").append(
-				'<div class="col px-0 text-primary"><div class="iconSvg size24 info"></div>Version: <span>' + pptx.version + "</span></div>"
+			const pptx = new PptxGenJS();
+
+			$("#infoLbl_PptxVers").prepend(`<span class="cursor-help me-1" title="${pptx.version}">${SVG_INFO_CIRCLE}</span>`);
+			$("#infoBox_PptxVers").val(pptx.version);
+			//
+			$("#infoLbl_ChartType").prepend(
+				`<span class="cursor-help me-1" title="${Object.keys(pptx.ChartType).join("; ")}">${SVG_INFO_CIRCLE}</span>`
 			);
-			$("#infoBar").append(
-				"<div class='col-auto text-success text-nowrap'><span style='cursor:help' title='" +
-					Object.keys(pptx.ChartType).join(" | ") +
-					"'><div class='iconSvg size24 circle check'></div>pptx.ChartType = " +
-					Object.keys(pptx.ChartType).length +
-					"</span></div>"
+			$("#infoBox_ChartType").val(Object.keys(pptx.ChartType).length);
+			//
+			$("#infoLbl_ShapeType").prepend(
+				`<span class="cursor-help me-1" title="${Object.keys(pptx.ShapeType).join("; ")}">${SVG_INFO_CIRCLE}</span>`
 			);
-			$("#infoBar").append(
-				"<div class='col-auto text-success text-nowrap'><span style='cursor:help' title='" +
-					Object.keys(pptx.SchemeColor).join(" | ") +
-					"'><div class='iconSvg size24 circle check'></div>pptx.SchemeColor = " +
-					Object.keys(pptx.SchemeColor).length +
-					"</span></div>"
+			$("#infoBox_ShapeType").val(Object.keys(pptx.ShapeType).length);
+			//
+			$("#infoLbl_SchemeColor").prepend(
+				`<span class="cursor-help me-1" title="${Object.keys(pptx.SchemeColor).join("; ")}">${SVG_INFO_CIRCLE}</span>`
 			);
-			$("#infoBar").append(
-				'<div class="col-auto text-success text-nowrap"><span><div class="iconSvg size24 circle check"></div>pptx.ShapeType = ' +
-					Object.keys(pptx.ShapeType).length +
-					"</span></div>"
-			);
+			$("#infoBox_SchemeColor").val(Object.keys(pptx.SchemeColor).length);
 		}
 	}
 
 	// STEP 3: Build UI elements
 	buildDataTable();
-	let pptx = new PptxGenJS();
-	["MASTER_SLIDE", "THANKS_SLIDE", "TITLE_SLIDE"].forEach(function (name, idx) {
-		$("#selSlideMaster").append('<option value="' + name + '">' + name + "</option>");
-	});
+	const pptx = new PptxGenJS();
+	["MASTER_SLIDE", "THANKS_SLIDE", "TITLE_SLIDE"].forEach((name) => $("#selSlideMaster").append(`<option value="${name}">${name}</option>`));
 
 	// STEP 4: Populate code areas
 	{
 		$("#demo-basic").text(
 			"// STEP 1: Create a new Presentation\n" +
-				"let pptx = new PptxGenJS();\n" +
-				"\n" +
-				"// STEP 2: Add a new Slide to the Presentation\n" +
-				"let slide = pptx.addSlide();\n" +
-				"\n" +
-				"// STEP 3: Add any objects to the Slide (charts, tables, shapes, images, etc.)\n" +
-				"slide.addText(\n" +
-				"  'BONJOUR - CIAO - GUTEN TAG - HELLO - HOLA - NAMASTE - OLÀ - ZDRAS-TVUY-TE - こんにちは - 你好',\n" +
-				"  { x:0.0, y:0.25, w:'100%', h:1.5, align:'center', fontSize:24, color:'0088CC', fill:{ color:'F1F1F1' } }\n" +
-				");\n" +
-				"\n" +
-				"// STEP 4: Send the PPTX Presentation to the user, using your choice of file name\n" +
-				"pptx.writeFile({ fileName: 'PptxGenJs-Basic-Slide-Demo' });\n"
+			"const pptx = new PptxGenJS();\n" +
+			"\n" +
+			"// STEP 2: Add a new Slide to the Presentation\n" +
+			"const slide = pptx.addSlide();\n" +
+			"\n" +
+			"// STEP 3: Add any objects to the Slide (charts, tables, shapes, images, etc.)\n" +
+			"slide.addText(\n" +
+			"  'BONJOUR - CIAO - GUTEN TAG - HELLO - HOLA - NAMASTE - OLÀ - ZDRAS-TVUY-TE - こんにちは - 你好',\n" +
+			"  { x:0.0, y:0.25, w:'100%', h:1.5, align:'center', fontSize:24, color:'0088CC', fill:{ color:'F1F1F1' } }\n" +
+			");\n" +
+			"\n" +
+			"// STEP 4: Send the PPTX Presentation to the user, using your choice of file name\n" +
+			"pptx.writeFile({ fileName: 'PptxGenJs-Basic-Slide-Demo' });\n"
 		);
 
 		$("#demo-sandbox").html(
-			"let pptx = new PptxGenJS();\n" +
-				"let slide = pptx.addSlide();\n" +
-				//+ "pptx.defineLayout({ name:'A3', width:16.5, height:11.7 });\n"
-				//+ "pptx.layout = 'A3';\n"
-				"\n" +
-				"slide.addText(\n" +
-				"  [\n" +
-				"    { text:'Did You Know?', options:{ fontSize:48, color:pptx.SchemeColor.accent1, breakLine:true } },\n" +
-				"    { text:'writeFile() returns a Promise', options:{ fontSize:24, color:pptx.SchemeColor.accent6, breakLine:true } },\n" +
-				"    { text:'!', options:{ fontSize:24, color:pptx.SchemeColor.accent6, breakLine:true } },\n" +
-				"    { text:'(pretty cool huh?)', options:{ fontSize:24, color:pptx.SchemeColor.accent3 } }\n" +
-				"  ],\n" +
-				"  { x:1, y:1, w:'80%', h:3, align:'center', fill:{ color:pptx.SchemeColor.background2, transparency:50 } }\n" +
-				");\n" +
-				"\n" +
-				"pptx.writeFile({ fileName: 'PptxGenJS-Sandbox.pptx' });\n"
+			"const pptx = new PptxGenJS();\n" +
+			"const slide = pptx.addSlide();\n" +
+			//+ "pptx.defineLayout({ name:'A3', width:16.5, height:11.7 });\n"
+			//+ "pptx.layout = 'A3';\n"
+			"\n" +
+			"slide.addText(\n" +
+			"  [\n" +
+			"    { text:'Did You Know?', options:{ fontSize:48, color:pptx.SchemeColor.accent1, breakLine:true } },\n" +
+			"    { text:'writeFile() returns a Promise', options:{ fontSize:24, color:pptx.SchemeColor.accent6, breakLine:true } },\n" +
+			"    { text:'!', options:{ fontSize:24, color:pptx.SchemeColor.accent6, breakLine:true } },\n" +
+			"    { text:'(pretty cool huh?)', options:{ fontSize:24, color:pptx.SchemeColor.accent3 } }\n" +
+			"  ],\n" +
+			"  { x:1, y:1, w:'80%', h:3, align:'center', fill:{ color:pptx.SchemeColor.background2, transparency:50 } }\n" +
+			");\n" +
+			"\n" +
+			"pptx.writeFile({ fileName: 'PptxGenJS-Sandbox.pptx' });\n"
 		);
 
 		$("#demo-master").html(
 			"pptx.defineSlideMaster({\n" +
-				"  title : 'MASTER_SLIDE',\n" +
-				"  margin: [ 0.5, 0.25, 1.00, 0.25 ],\n" +
-				"  background: { color: 'FFFFFF' },\n" +
-				"  objects: [\n" +
-				"    { image: { x:11.45, y:5.95, w:1.67, h:0.75, data:STARLABS_LOGO_SM } },\n" +
-				"    { rect:  { x:0, y:6.9, w:'100%', h:0.6, fill: { color:'003b75' } } },\n" +
-				"    { text:  {\n" +
-				"        text: 'S.T.A.R. Laboratories - Confidential',\n" +
-				"        options: { x:0, y:6.9, w:'100%', align:'center', color:'FFFFFF', fontSize:12 }\n" +
-				"    }}\n" +
-				//+ "    }},\n"
-				//+ "    {placeholder: { options:{ name:'title', type:'title', x:0.5, y:0.2, w:12, h:1.0 }, text:'' }}\n"
-				//+ "    {placeholder: { options:{ name:'body', type:'body', x:6.0, y:1.5, w:12, h:5.25 }, text:'' }}\n"
-				"  ],\n" +
-				"  slideNumber: { x:1.0, y:7.0, color:'FFFFFF' }\n" +
-				"});\n"
+			"  title : 'MASTER_SLIDE',\n" +
+			"  margin: [ 0.5, 0.25, 1.00, 0.25 ],\n" +
+			"  background: { color: 'FFFFFF' },\n" +
+			"  objects: [\n" +
+			"    { image: { x:11.45, y:5.95, w:1.67, h:0.75, data:STARLABS_LOGO_SM } },\n" +
+			"    { rect:  { x:0, y:6.9, w:'100%', h:0.6, fill: { color:'003b75' } } },\n" +
+			"    { text:  {\n" +
+			"        text: 'S.T.A.R. Laboratories - Confidential',\n" +
+			"        options: { x:0, y:6.9, w:'100%', align:'center', color:'FFFFFF', fontSize:12 }\n" +
+			"    }}\n" +
+			//+ "    }},\n"
+			//+ "    {placeholder: { options:{ name:'title', type:'title', x:0.5, y:0.2, w:12, h:1.0 }, text:'' }}\n"
+			//+ "    {placeholder: { options:{ name:'body', type:'body', x:6.0, y:1.5, w:12, h:5.25 }, text:'' }}\n"
+			"  ],\n" +
+			"  slideNumber: { x:1.0, y:7.0, color:'FFFFFF' }\n" +
+			"});\n"
 		);
 	}
 
 	// STEP 5: Demo setup
 	$("#tabLargeCellText tbody td").text(LOREM_IPSUM.substring(0, 3000));
-	for (let idx = 0; idx < 30; idx++) {
+	for (let idx = 0; idx < 36; idx++) {
 		$("#tabLotsOfLines tbody").append("<tr><td>Row-" + idx + "</td><td>Col-B</td><td>Col-C</td></tr>");
 	}
 
 	// LAST: Re-highlight code
-	$(".tab-content code.language-javascript").each(function (idx, ele) {
+	$(".tab-content code.language-javascript").each(function(idx, ele) {
 		Prism.highlightElement($(ele)[0]);
 	});
 
@@ -141,11 +137,11 @@ export function runAllDemos() {
 	$("#modalBusy").modal("show");
 
 	runEveryTest()
-		.catch(function (err) {
+		.catch(function(err) {
 			console.error(err.toString());
 			$("#modalBusy").modal("hide");
 		})
-		.then(function () {
+		.then(function() {
 			if (console.timeEnd) console.timeEnd("runAllDemos");
 			$("#modalBusy").modal("hide");
 		});
@@ -156,11 +152,11 @@ export function execGenSlidesFunc(type) {
 	$("#modalBusy").modal("show");
 
 	execGenSlidesFuncs(type)
-		.catch(function (err) {
+		.catch(function(err) {
 			$("#modalBusy").modal("hide");
 			console.error(err);
 		})
-		.then(function () {
+		.then(function() {
 			$("#modalBusy").modal("hide");
 			if (console.timeEnd) console.timeEnd("execGenSlidesFunc: " + type);
 		});
@@ -172,7 +168,7 @@ export function buildDataTable() {
 
 	// STEP 2:
 	for (let idx = 0; idx < $("#numTab2SlideRows").val(); idx++) {
-		let strHtml =
+		const strHtml =
 			"<tr>" +
 			'<td style="text-align:center">' +
 			(idx + 1) +
@@ -199,26 +195,28 @@ export function buildDataTable() {
 }
 
 export function table2slidesDemoForTab(inTabId, inOpts) {
-	let pptx = new PptxGenJS();
+	const pptx = new PptxGenJS();
 	pptx.tableToSlides(inTabId, inOpts || null);
 	pptx.writeFile({ fileName: `${inTabId}_${getTimestamp()}` });
 }
 
 export function table2slides1() {
 	// FIRST: Instantiate new PptxGenJS instance
-	let pptx = new PptxGenJS();
+	const pptx = new PptxGenJS();
 
 	// STEP 1: Add Master Slide defs / Set slide size/layout
 	addMasterDefs(pptx);
 	pptx.layout = "LAYOUT_WIDE";
 
 	// STEP 2: Set generated Slide options
-	let objOpts = {};
-	//objOpts.verbose = true;
-	if ($("input[name=radioHead]:checked").val() == "Y") objOpts.autoPageRepeatHeader = true;
-	if ($("#checkStartY").prop("checked")) objOpts.autoPageSlideStartY = Number($("#numTab2SlideStartY").val());
+	const objOpts = {
+		autoPageCharWeight: -0.2,
+		autoPageLineWeight: 0,
+		verbose: false,
+	};
+	if ($("#repeatHeadRow").val() == "Y") objOpts.autoPageRepeatHeader = true;
+	if ($("#slideStartY").val()) objOpts.autoPageSlideStartY = Number($("#slideStartY").val());
 	if ($("#selSlideMaster").val()) objOpts.masterSlideName = $("#selSlideMaster").val();
-	//console.log(JSON.stringify(objOpts));
 
 	// STEP 3: Pass table to tableToSlides function to produce 1-N slides
 	pptx.tableToSlides("tabAutoPaging", objOpts);
@@ -227,29 +225,39 @@ export function table2slides1() {
 	pptx.writeFile({ fileName: `Table2Slides_MasterSlide_${getTimestamp()}` });
 }
 
-export function table2slides2() {
+export function table2slides2(addImage) {
 	// FIRST: Instantiate new PptxGenJS instance
-	let pptx = new PptxGenJS();
+	const pptx = new PptxGenJS();
 
 	// STEP 1: Add Master Slide defs / Set slide size/layout
-	addMasterDefs(pptx);
 	pptx.layout = "LAYOUT_WIDE";
+	addMasterDefs(pptx);
 
 	// STEP 2: Set generated Slide options
-	let objOpts = {};
+	const objOpts = {};
 	//objOpts.verbose = true;
-	if ($("input[name=radioHead]:checked").val() == "Y") objOpts.addHeaderToEach = true; // TEST: DEPRECATED: addHeaderToEach
-	if ($("#checkStartY").prop("checked")) objOpts.newSlideStartY = Number($("#numTab2SlideStartY").val()); // TEST: DEPRECATED: `newSlideStartY`
+	if ($("#repeatHeadRow").val() == "Y") objOpts.addHeaderToEach = true; // TEST: DEPRECATED: addHeaderToEach
+	if ($("#slideStartY").val()) objOpts.newSlideStartY = Number($("#slideStartY").val()); // TEST: DEPRECATED: `newSlideStartY`
 	if ($("#selSlideMaster").val()) objOpts.masterSlideName = $("#selSlideMaster").val();
 
 	// STEP 3: Add a custom shape (text in this case) to each Slide
 	// EXAMPLE: Add any dynamic content to each generated Slide
 	// DESC: Add something you cant predefine in a master - like a username/timestamp for each slide, etc.
-	// NOTE: You can do this for all other types as well: .addShape(), .addTable() and .addImage()
+	// NOTE: You can do this for all other types as well: `addImage()`, `addShape()`, `addTable()`
+	// NOTE: You can only use a single method (e.g.: you cant use `addImage` and another `addImage`)
 	objOpts.addText = {
-		text: "(dynamic content - ex:user/datestamp)",
-		options: { x: 0.1, y: 0.07, color: "0088CC", fontFace: "Arial", fontSize: 12 },
+		text: "[addText content here (ex: user/datestamp)]",
+		options: { x: 0.05, y: 0.05, h: 0.4, color: "0088CC", fontFace: "Arial", fontSize: 12 },
 	};
+	if (addImage) {
+		/*
+		objOpts.addImage = {
+			image: { path: "https://upload.wikimedia.org/wikipedia/en/a/a9/Example.jpg" },
+			options: { x: 0.0, y: 5.75, w: 1.75, h: 1.62 },
+		};
+		*/
+		objOpts.addImage = { image: { data: CHECKMARK_GRN }, options: { x: 12.67, y: 0.0, w: 0.67, h: 0.67 } };
+	}
 
 	// STEP 4: Pass table to tableToSlides function to produce 1-N slides
 	pptx.tableToSlides("tabAutoPaging", objOpts);
@@ -261,15 +269,27 @@ export function table2slides2() {
 // ==================================================================================================================
 
 function doNavRestore() {
-	$('.nav a[href="' + window.location.href.substring(window.location.href.toLowerCase().indexOf(".html#") + 5) + '"]').tab("show");
+	const triggerTabList = [].slice.call(document.querySelectorAll("#myTab button"));
+	triggerTabList.forEach(function(triggerEl) {
+		var tabTrigger = new bootstrap.Tab(triggerEl);
+		triggerEl.addEventListener("click", function(event) {
+			event.preventDefault();
+			tabTrigger.show();
+		});
+	});
+
+	const tabTarget = window.location.href.substring(window.location.href.toLowerCase().indexOf(".html#") + 6);
+	const triggerEl = document.querySelector(`#myTab button[data-bs-target="#tab-${tabTarget}"]`);
+	const triggerIn = bootstrap.Tab.getInstance(triggerEl);
+	if (triggerIn) triggerIn.show();
 }
 
 function getTimestamp() {
-	let dateNow = new Date();
-	let dateMM = dateNow.getMonth() + 1;
-	let dateDD = dateNow.getDate();
-	let h = dateNow.getHours();
-	let m = dateNow.getMinutes();
+	const dateNow = new Date();
+	const dateMM = dateNow.getMonth() + 1;
+	const dateDD = dateNow.getDate();
+	const h = dateNow.getHours();
+	const m = dateNow.getMinutes();
 	return (
 		dateNow.getFullYear() +
 		"" +
@@ -303,7 +323,7 @@ function addMasterDefs(pptx) {
 	pptx.defineSlideMaster({
 		title: "MASTER_SLIDE",
 		background: { fill: "F1F1F1" },
-		slideNumber: { x: 1.0, y: 7.0, color: "FFFFFF" },
+		slideNumber: { x: 1.0, y: "50%", color: "FFFFFF" },
 		margin: [0.5, 0.25, 1.25, 0.25],
 		objects: [
 			{ rect: { x: 0.0, y: 6.9, w: "100%", h: 0.6, fill: { color: "003b75" } } },
@@ -338,9 +358,9 @@ function addMasterDefs(pptx) {
 // ==================================================================================================================
 
 function doTestSimple() {
-	let pptx = new PptxGenJS();
-	let slide = pptx.addSlide();
-	let optsTitle = { color: "9F9F9F", marginPt: 3, border: [0, 0, { pt: "1", color: "CFCFCF" }, 0] };
+	const pptx = new PptxGenJS();
+	const slide = pptx.addSlide();
+	const optsTitle = { color: "9F9F9F", marginPt: 3, border: [0, 0, { pt: "1", color: "CFCFCF" }, 0] };
 
 	pptx.layout({ name: "A3", width: 16.5, height: 11.7 });
 	slide.slideNumber({ x: 0.5, y: "90%" });
@@ -401,9 +421,9 @@ function doTestSimple() {
 
 /* The "Text" demo on the PptxGenJS homepage - codified here so we can quickly reproduce the screencaps, etc. as needed */
 function doHomepageDemo_Text() {
-	let pptx = new PptxGenJS();
+	const pptx = new PptxGenJS();
 	pptx.layout = "LAYOUT_WIDE";
-	let slide = pptx.addSlide();
+	const slide = pptx.addSlide();
 
 	slide.addText("BONJOUR - CIAO - GUTEN TAG - HELLO - HOLA - \nNAMASTE - OLÀ - ZDRAS-TVUY-TE - こんにちは - 你好", {
 		x: 0.0,
@@ -454,7 +474,7 @@ function doHomepageDemo_Text() {
 	slide.addText("Star bullet! ", { x: 8.0, y: 5.6, w: "40%", h: 0.38, color: "CC0000", bullet: { code: "2605" } });
 	slide.addText("Check bullet!", { x: 8.0, y: 5.9, w: "40%", h: 0.38, color: "00CD00", bullet: { code: "2713" } });
 
-	let shadowOpts = { type: "outer", color: "696969", blur: 3, offset: 10, angle: 45, opacity: 0.8 };
+	const shadowOpts = { type: "outer", color: "696969", blur: 3, offset: 10, angle: 45, opacity: 0.8 };
 	slide.addText("Text Shadow:", { x: 0.5, y: 6.0, w: "40%", h: 0.38, color: "0088CC" });
 	slide.addText("Outer Shadow (blur:3, offset:10, angle:45, opacity:80%)", {
 		x: 0.5,
@@ -470,7 +490,7 @@ function doHomepageDemo_Text() {
 }
 
 function testTTS() {
-	let pptx = new PptxGenJS();
+	const pptx = new PptxGenJS();
 	pptx.layout = "LAYOUT_WIDE";
 	/*
 	let slide = pptx.addSlide();
@@ -491,22 +511,22 @@ function testTTS() {
 }
 
 function testTTSMulti() {
-	let ttsTitleText = { fontSize: 14, color: "0088CC", bold: true };
-	let ttsMultiOpts = { fontSize: 13, color: "9F9F9F", verbose: true };
-	let arrRows = [];
-	let arrText = [];
+	const ttsTitleText = { fontSize: 14, color: "0088CC", bold: true };
+	const ttsMultiOpts = { fontSize: 13, color: "9F9F9F", verbose: true };
+	const arrRows = [];
+	const arrText = [];
 	//
-	let pptx = new PptxGenJS();
+	const pptx = new PptxGenJS();
 	pptx.layout = "LAYOUT_WIDE";
 
 	for (let idx = 0; idx < TABLE_NAMES_F.length; idx++) {
-		let strText = idx == 0 ? LOREM_IPSUM.substring(0, 100) : LOREM_IPSUM.substring(idx * 100, idx * 200);
+		const strText = idx == 0 ? LOREM_IPSUM.substring(0, 100) : LOREM_IPSUM.substring(idx * 100, idx * 200);
 		arrRows.push([idx, TABLE_NAMES_F[idx], strText]);
 		arrText.push([strText]);
 	}
 
 	// autoPageLineWeight option demos
-	let slide = pptx.addSlide();
+	const slide = pptx.addSlide();
 	slide.addText(
 		[
 			{ text: "Table Examples: ", options: ttsTitleText },
@@ -538,7 +558,7 @@ function testTTSMulti() {
 }
 
 function table2slidesBullets() {
-	let pptx = new PptxGenJS();
+	const pptx = new PptxGenJS();
 	pptx.tableToSlides("tableWithBullets");
 	pptx.writeFile({ fileName: `tabBullets_${getTimestamp()}` });
 }
@@ -546,8 +566,8 @@ function table2slidesBullets() {
 /* DESC: Test for backward compatibility with Slide Masters defined in `pptxgen.masters.js` */
 function testOnly_LegacyMasterSlides() {
 	// TEST-ONLY: DO NOT USE/COPY ME!!
-	let pptx = new PptxGenJS();
+	const pptx = new PptxGenJS();
 	pptx.layout = "LAYOUT_WIDE";
-	let slide = pptx.addSlide(pptx.masters.TITLE_SLIDE);
+	const slide = pptx.addSlide(pptx.masters.TITLE_SLIDE);
 	pptx.writeFile({ fileName: `Demo-LegacyMasterSlides_${getTimestamp()}` });
 }

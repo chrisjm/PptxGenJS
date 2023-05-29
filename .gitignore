@@ -8,12 +8,10 @@ bower_components/
 node_modules/
 npm-debug.log
 src/bld
+demo
 
 ### docusaurus
-./*.html
-*.html
-demo
-docs/
-img/
-privacy.html
-website
+.docusaurus
+build
+docs
+static
