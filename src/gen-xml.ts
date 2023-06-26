@@ -1792,16 +1792,15 @@ export function makeXmlTheme(): string {
 export function makeXmlPresentation(pres: IPresentationProps): string {
 	let strXml =
 		`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>${CRLF}` +
-		`<p:presentation xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" ` +
-		`xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main" ${pres.rtlMode ? 'rtl="1"' : ''} saveSubsetFonts="1" autoCompressPictures="0">`
+		'<p:presentation ' +
+		'xmlns:p15="http://schemas.microsoft.com/office/powerpoint/2012/main" ' +
+		'xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" ' +
+		'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" ' +
+		`xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main" ${pres.rtlMode ? 'rtl="1"' : ''} ` +
+		'saveSubsetFonts="1" autoCompressPictures="0">'
 
 	// STEP 1: Add slide master (SPEC: tag 1 under <presentation>)
 	strXml += '<p:sldMasterIdLst><p:sldMasterId id="2147483648" r:id="rId1"/></p:sldMasterIdLst>'
-
-	// STEP 2: Add all Slides (SPEC: tag 3 under <presentation>)
-	strXml += '<p:sldIdLst>'
-	pres.slides.forEach(slide => (strXml += `<p:sldId id="${slide._slideId}" r:id="rId${slide._rId}"/>`))
-	strXml += '</p:sldIdLst>'
 
 	// STEP 3: Add Notes Master (SPEC: tag 2 under <presentation>)
 	// (NOTE: length+2 is from `presentation.xml.rels` func (since we have to match this rId, we just use same logic))
@@ -1809,6 +1808,11 @@ export function makeXmlPresentation(pres: IPresentationProps): string {
 	// IMPORTANT: Placing this before `<p:sldIdLst>` causes warning in modern powerpoint!
 	// IMPORTANT: Presentations open without warning Without this line, however, the pres isnt preview in Finder anymore or viewable in iOS!
 	strXml += `<p:notesMasterIdLst><p:notesMasterId r:id="rId${pres.slides.length + 2}"/></p:notesMasterIdLst>`
+
+	// STEP 2: Add all Slides (SPEC: tag 3 under <presentation>)
+	strXml += '<p:sldIdLst>'
+	pres.slides.forEach(slide => (strXml += `<p:sldId id="${slide._slideId}" r:id="rId${slide._rId}"/>`))
+	strXml += '</p:sldIdLst>'
 
 	// STEP 4: Add sizes
 	strXml += `<p:sldSz cx="${pres.presLayout.width}" cy="${pres.presLayout.height}"/>`
